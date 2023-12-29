@@ -5,7 +5,8 @@
 
 @font-face {
   font-family: '_Twemoji Mozilla';
-  src: url('../../assets/Twemoji_Mozilla.ttf') format('truetype');
+  src: url('../../Twemoji_Mozilla.ttf') format('truetype');
+  unicode-range: U+00A9-E007F;
 }
 
 .relative {
@@ -64,7 +65,7 @@
 :root {
   --font-mono: 'Roboto Mono', Menlo, monospace;
   // prettier-ignore
-  --font-normal: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",  "Source Han Sans", "PingFang SC", "Microsoft YaHei" , "微软雅黑", Arial,"Twemoji Mozilla", "_Twemoji Mozilla","Segoe UI Emoji", "Segoe UI Symbol";
+  --font-normal: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",  "Source Han Sans", "PingFang SC", "Microsoft YaHei" , "微软雅黑", Arial,"_Twemoji Mozilla","Twemoji Mozilla", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 body {
