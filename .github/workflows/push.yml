@@ -17,14 +17,11 @@ jobs:
           node-version: '18.x'
           cache: pnpm
       - name: Install package and build
-        run: |
-          pnpm install --no-frozen-lockfile
-          pnpm build
+        run: npm install -g pnpm && pnpm i && pnpm build
       - name: Deploy
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
           build_dir: public
-          fqdn: yacd.metacubex.one
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

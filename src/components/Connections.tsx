@@ -174,16 +174,9 @@ function modifyChains(chains: string[]): string {
 
   if (chains.length === 1) {
     return chains[0];
+  } else {
+    return `${chains.pop()} :: ${chains[0]}`;
   }
-
-  //倒序
-  if (chains.length === 2) {
-    return `${chains[1]} -> ${chains[0]}`;
-  }
-
-  const first = chains.pop();
-  const last = chains.shift();
-  return `${first} -> ${last}`;
 }
 
 function renderTableOrPlaceholder(columns, hiddenColumns, conns: FormattedConn[]) {
@@ -203,6 +196,7 @@ function ConnQty({ qty }) {
 const sortDescFirst = true;
 const hiddenColumnsOrigin = ['id'];
 const columnsOrigin = [
+  { Header: 'c_ctrl', accessor: 'ctrl' },
   { accessor: 'id', show: false },
   { Header: 'c_type', accessor: 'type' },
   { Header: 'c_process', accessor: 'process' },
@@ -217,7 +211,6 @@ const columnsOrigin = [
   { Header: 'c_source', accessor: 'source' },
   { Header: 'c_destination_ip', accessor: 'destinationIP' },
   { Header: 'c_sni', accessor: 'sniffHost' },
-  { Header: 'c_ctrl', accessor: 'ctrl' },
 ];
 
 const savedHiddenColumns = localStorage.getItem('hiddenColumns');

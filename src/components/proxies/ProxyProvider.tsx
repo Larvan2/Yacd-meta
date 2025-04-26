@@ -101,7 +101,7 @@ function ProxyProviderImpl({
           display: 'flex',
           alignItems: 'center',
           flexWrap: 'wrap',
-          justifyContent: 'space-between',
+          justifyContent: 'start',
         }}
       >
         <CollapsibleSectionHeader

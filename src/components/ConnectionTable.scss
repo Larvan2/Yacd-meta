@@ -2,7 +2,6 @@
   td.ctrl {
     min-width: 4em;
     text-align: center;
-    display: flex;
     justify-content: center;
     align-items: center;
 
@@ -18,6 +17,10 @@
   td.download,
   td.upload {
     min-width: 7em;
+    text-align: center;
+  }
+
+  td.process {
     text-align: center;
   }
 }

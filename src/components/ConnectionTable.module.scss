@@ -26,21 +26,24 @@
 }
 
 .break {
+  /* 上边下边 | 左边右边 */
+  max-width: 13em;
+  min-width: 9em;
   word-wrap: break-word;
-  word-break: break-all;
-  align-items: center;
-  text-align: left;
+  overflow-wrap: break-word;
 }
 
 .td {
   /* 上边下边 | 左边右边 */
   padding: 10px 5px;
   font-size: 0.9em;
-  // max-width: 14em;
-  min-width: 9em;
+  max-width: 18em;
+  min-width: 10em;
   cursor: default;
   text-align: left;
   vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 
   &:hover {
