@@ -4,9 +4,16 @@ import React from 'react';
 import { Pause, Play, RefreshCcw, Settings, Tag, X as IconClose } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import { useRecoilState } from 'recoil';
 
 import { ConnectionItem } from '~/api/connections';
 import Select from '~/components/shared/Select';
+import {
+  closedConnectionsState,
+  connectionsState,
+  FormattedConn,
+  isRefreshPausedState,
+} from '~/store/connections';
 import { State } from '~/store/types';
 
 import * as connAPI from '../api/connections';
@@ -19,7 +26,7 @@ import Input from './Input';
 import ModalCloseAllConnections from './ModalCloseAllConnections';
 import ModalManageConnectionColumns from './ModalManageConnectionColumns';
 import ModalSourceIP from './ModalSourceIP';
-import { Action, Fab, position as fabPosition } from './shared/Fab';
+import { Fab, position as fabPosition } from './shared/Fab';
 import { connect } from './StateProvider';
 import SvgYacd from './SvgYacd';
 
@@ -40,28 +47,6 @@ function arrayToIdKv<T extends { id: string }>(items: T[]) {
   }
   return o;
 }
-
-type FormattedConn = {
-  id: string;
-  upload: number;
-  download: number;
-  start: number;
-  chains: string;
-  rule: string;
-  destinationPort: string;
-  destinationIP: string;
-  remoteDestination: string;
-  sourceIP: string;
-  sourcePort: string;
-  source: string;
-  host: string;
-  sniffHost: string;
-  type: string;
-  network: string;
-  process?: string;
-  downloadSpeedCurr?: number;
-  uploadSpeedCurr?: number;
-};
 
 function hasSubstring(s: string, pat: string) {
   return s.toLowerCase().includes(pat.toLowerCase());
@@ -220,35 +205,32 @@ const columnsOrigin = [
   { Header: 'c_ctrl', accessor: 'ctrl' },
 ];
 
-const savedHiddenColumns = localStorage.getItem('hiddenColumns');
-const savedColumns = localStorage.getItem('columns');
-
-const hiddenColumnsInit = savedHiddenColumns
-  ? JSON.parse(savedHiddenColumns)
-  : [...hiddenColumnsOrigin];
-
-const columnOrder = savedColumns ? JSON.parse(savedColumns) : null;
-const columnsInit = columnOrder
-  ? [...columnsOrigin].sort((pre, next) => {
-      const preIdx = columnOrder.findIndex((column) => column.accessor === pre.accessor);
-      const nextIdx = columnOrder.findIndex((column) => column.accessor === next.accessor);
-
-      if (preIdx === -1) {
-        return 1;
-      }
-
-      if (nextIdx === -1) {
-        return -1;
-      }
-      return preIdx - nextIdx;
-    })
-  : [...columnsOrigin];
-
 function Conn({ apiConfig }) {
   const { t } = useTranslation();
   const [showModalColumn, setModalColumn] = useState(false);
-  const [hiddenColumns, setHiddenColumns] = useState(hiddenColumnsInit);
-  const [columns, setColumns] = useState(columnsInit);
+  const [hiddenColumns, setHiddenColumns] = useState(() => {
+    const savedHiddenColumns = localStorage.getItem('hiddenColumns');
+    return savedHiddenColumns ? JSON.parse(savedHiddenColumns) : [...hiddenColumnsOrigin];
+  });
+  const [columns, setColumns] = useState(() => {
+    const savedColumns = localStorage.getItem('columns');
+    const columnOrder = savedColumns ? JSON.parse(savedColumns) : null;
+    return columnOrder
+      ? [...columnsOrigin].sort((pre, next) => {
+          const preIdx = columnOrder.findIndex((column) => column.accessor === pre.accessor);
+          const nextIdx = columnOrder.findIndex((column) => column.accessor === next.accessor);
+
+          if (preIdx === -1) {
+            return 1;
+          }
+
+          if (nextIdx === -1) {
+            return -1;
+          }
+          return preIdx - nextIdx;
+        })
+      : [...columnsOrigin];
+  });
 
   const closeModalColumn = () => {
     setModalColumn(false);
@@ -265,8 +247,9 @@ function Conn({ apiConfig }) {
   const [sourceMap, setSourceMap] = useState(sourceMapInit);
   const [refContainer, containerHeight] = useRemainingViewPortHeight();
 
-  const [conns, setConns] = useState([]);
-  const [closedConns, setClosedConns] = useState([]);
+  // 使用 Recoil 全局状态，切换页面时保持数据
+  const [conns, setConns] = useRecoilState(connectionsState);
+  const [closedConns, setClosedConns] = useRecoilState(closedConnectionsState);
 
   const [filterKeyword, setFilterKeyword] = useState('');
   const [filterSourceIpStr, setFilterSourceIpStr] = useState(ALL_SOURCE_IP);
@@ -300,15 +283,18 @@ function Conn({ apiConfig }) {
   const [isCloseAllModalOpen, setIsCloseAllModalOpen] = useState(false);
   const openCloseAllModal = useCallback(() => setIsCloseAllModalOpen(true), []);
   const closeCloseAllModal = useCallback(() => setIsCloseAllModalOpen(false), []);
-  const [isRefreshPaused, setIsRefreshPaused] = useState(false);
+  // 使用 Recoil 全局状态
+  const [isRefreshPaused, setIsRefreshPaused] = useRecoilState(isRefreshPausedState);
   const toggleIsRefreshPaused = useCallback(() => {
     setIsRefreshPaused((x) => !x);
-  }, []);
+  }, [setIsRefreshPaused]);
   const closeAllConnections = useCallback(() => {
     connAPI.closeAllConnections(apiConfig);
     closeCloseAllModal();
   }, [apiConfig, closeCloseAllModal]);
-  const prevConnsRef = useRef(conns);
+  // 使用 ref 保存上一次的连接数据，用于计算速度和检测关闭的连接
+  // 初始化为当前 Recoil 状态中的值，确保页面切换回来时数据正确
+  const prevConnsRef = useRef<FormattedConn[]>(conns);
   const read = useCallback(
     ({ connections }) => {
       const prevConnsKv = arrayToIdKv(prevConnsRef.current);
@@ -383,35 +369,70 @@ function Conn({ apiConfig }) {
             display: 'flex',
             flexWrap: 'wrap',
             paddingLeft: '30px',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingRight: '30px',
           }}
         >
-          <TabList
-            style={{
-              padding: '0 15px 0 0',
-            }}
-          >
-            <Tab>
-              <span>{t('Active')}</span>
-              <span className={s.connQty}>
-                {/* @ts-expect-error ts-migrate(2786) FIXME: 'ConnQty' cannot be used as a JSX component. */}
-                <ConnQty qty={filteredConns.length} />
-              </span>
-            </Tab>
-            <Tab>
-              <span>{t('Closed')}</span>
-              <span className={s.connQty}>
-                {/* @ts-expect-error ts-migrate(2786) FIXME: 'ConnQty' cannot be used as a JSX component. */}
-                <ConnQty qty={filteredClosedConns.length} />
-              </span>
-            </Tab>
-          </TabList>
-          <Select
-            options={connIpSet}
-            selected={filterSourceIpStr}
-            style={{ width: 'unset' }}
-            onChange={(e) => setFilterSourceIpStr(e.target.value)}
-          />
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+            <TabList
+              style={{
+                padding: '0 15px 0 0',
+              }}
+            >
+              <Tab>
+                <span>{t('Active')}</span>
+                <span className={s.connQty}>
+                  {/* @ts-expect-error ts-migrate(2786) FIXME: 'ConnQty' cannot be used as a JSX component. */}
+                  <ConnQty qty={filteredConns.length} />
+                </span>
+              </Tab>
+              <Tab>
+                <span>{t('Closed')}</span>
+                <span className={s.connQty}>
+                  {/* @ts-expect-error ts-migrate(2786) FIXME: 'ConnQty' cannot be used as a JSX component. */}
+                  <ConnQty qty={filteredClosedConns.length} />
+                </span>
+              </Tab>
+            </TabList>
+            <Select
+              options={connIpSet}
+              selected={filterSourceIpStr}
+              style={{ width: 'unset' }}
+              onChange={(e) => setFilterSourceIpStr(e.target.value)}
+            />
+          </div>
+          <div className={s.toolbar}>
+            <button
+              className={s.toolbarBtn}
+              onClick={openCloseAllModal}
+              title={t('close_all_connections')}
+            >
+              <IconClose size={15} />
+            </button>
+            <button
+              className={s.toolbarBtn}
+              onClick={openCloseFilterModal}
+              title={t('close_filter_connections')}
+            >
+              <IconClose size={13} />
+              <span className={s.toolbarBtnBadge}>F</span>
+            </button>
+            <span className={s.toolbarDivider} />
+            <button
+              className={s.toolbarBtn}
+              onClick={() => setModalColumn(true)}
+              title={t('manage_column')}
+            >
+              <Settings size={15} />
+            </button>
+            <button className={s.toolbarBtn} onClick={resetColumns} title={t('reset_column')}>
+              <RefreshCcw size={15} />
+            </button>
+            <button className={s.toolbarBtn} onClick={openModalSource} title={t('client_tag')}>
+              <Tag size={15} />
+            </button>
+          </div>
         </div>
         <div ref={refContainer} style={{ padding: 30, paddingBottom: 10, paddingTop: 10 }}>
           <div
@@ -428,39 +449,10 @@ function Conn({ apiConfig }) {
                 style={fabPosition}
                 text={isRefreshPaused ? t('Resume Refresh') : t('Pause Refresh')}
                 onClick={toggleIsRefreshPaused}
-              >
-                <Action text={t('close_all_connections')} onClick={openCloseAllModal}>
-                  <IconClose size={10} />
-                </Action>
-                <Action text={t('close_filter_connections')} onClick={openCloseFilterModal}>
-                  <IconClose size={10} />
-                </Action>
-                <Action text={t('manage_column')} onClick={() => setModalColumn(true)}>
-                  <Settings size={10} />
-                </Action>
-                <Action text={t('reset_column')} onClick={resetColumns}>
-                  <RefreshCcw size={10} />
-                </Action>
-                <Action text={t('client_tag')} onClick={openModalSource}>
-                  <Tag size={10} />
-                </Action>
-              </Fab>
+              />
             </TabPanel>
             <TabPanel>
               {renderTableOrPlaceholder(columns, hiddenColumns, filteredClosedConns)}
-              <Fab
-                icon={<Settings size={16} />}
-                style={fabPosition}
-                text={t('manage_column')}
-                onClick={() => setModalColumn(true)}
-              >
-                <Action text={t('reset_column')} onClick={resetColumns}>
-                  <RefreshCcw size={10} />
-                </Action>
-                <Action text={t('client_tag')} onClick={openModalSource}>
-                  <Tag size={10} />
-                </Action>
-              </Fab>
             </TabPanel>
           </div>
         </div>

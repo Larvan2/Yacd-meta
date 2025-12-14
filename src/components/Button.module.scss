@@ -11,18 +11,24 @@
   justify-content: center;
   color: var(--color-btn-fg);
   background: var(--color-btn-bg);
-  border: 1px solid #555;
+  border: 1px solid var(--color-input-border);
   border-radius: 100px;
+  transition: all 0.2s ease;
+
   &:focus {
     border-color: var(--color-focus-blue);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
   }
   &:hover {
     color: #fff;
     background: var(--color-focus-blue);
-    border: 1px solid var(--color-focus-blue);
+    border-color: var(--color-focus-blue);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
   &:active {
     transform: scale(0.97);
+    box-shadow: none;
   }
 
   font-size: 0.75em;

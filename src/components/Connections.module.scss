@@ -1,42 +1,41 @@
 .placeHolder {
-  margin-top: 20%;
+  margin-top: 15%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--color-background);
-  opacity: 0.1;
+  color: var(--color-text-secondary);
+  opacity: 0.15;
 
   @media (max-width: 768px) {
-    margin-top: 35%;
+    margin-top: 25%;
   }
 }
 
 .connQty {
   font-family: var(--font-normal);
-  font-size: 0.75em;
-  margin-left: 3px;
-  padding: 2px 7px;
+  font-size: 0.7em;
+  margin-left: 6px;
+  padding: 2px 8px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--bg-near-transparent);
-  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  font-weight: 600;
+  min-width: 20px;
 }
 
 .header {
   display: grid;
-  grid-template-columns: 1fr minmax(auto, 290px);
+  grid-template-columns: 1fr minmax(auto, 320px);
   align-items: center;
-
-  /*
-   * the content header has some padding
-   * we need to apply some right padding to this container then
-   */
-  padding-right: 15px;
+  padding-right: 20px;
+  margin-bottom: 8px;
 
   @media (--breakpoint-not-small) {
-    padding-right: 25px;
+    padding-right: 30px;
   }
 }
 
@@ -56,15 +55,87 @@
   -webkit-appearance: none;
   background-color: var(--color-input-bg);
   background-image: none;
-  border-radius: 18px;
-  border: 1px solid var(--color-input-border);
+  border-radius: 12px;
+  border: 1px solid transparent;
   box-sizing: border-box;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   display: inline-block;
-  font-size: inherit;
-  height: 36px;
+  font-size: 0.95em;
+  height: 40px;
   outline: none;
-  padding: 0 15px;
-  transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  padding: 0 16px;
+  transition: all 0.2s ease;
   width: 100%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+  }
+
+  &:focus {
+    border-color: var(--color-focus-blue);
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+  }
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 4px;
+  background: var(--bg-near-transparent);
+  border-radius: 12px;
+}
+
+.toolbarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-focus-blue);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+}
+
+.toolbarBtnBadge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  font-size: 9px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(231, 76, 60, 0.4);
+}
+
+.toolbarDivider {
+  width: 1px;
+  height: 20px;
+  background: var(--color-text-secondary);
+  opacity: 0.2;
+  margin: 0 2px;
 }

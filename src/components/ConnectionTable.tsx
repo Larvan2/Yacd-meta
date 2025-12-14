@@ -9,6 +9,7 @@ import { XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { useSortBy, useTable } from 'react-table';
 
+import { FormattedConn } from '~/store/connections';
 import { State } from '~/store/types';
 
 import * as connAPI from '../api/connections';
@@ -16,6 +17,7 @@ import prettyBytes from '../misc/pretty-bytes';
 import { getClashAPIConfig } from '../store/app';
 import s from './ConnectionTable.module.scss';
 import MOdalCloseConnection from './ModalCloseAllConnections';
+import ModalConnectionDetails from './ModalConnectionDetails';
 import { connect } from './StateProvider';
 
 const sortById = { id: 'id', desc: true };
@@ -23,6 +25,7 @@ const sortById = { id: 'id', desc: true };
 function Table({ data, columns, hiddenColumns, apiConfig }) {
   const [operationId, setOperationId] = useState('');
   const [showModalDisconnect, setShowModalDisconnect] = useState(false);
+  const [selectedConn, setSelectedConn] = useState<FormattedConn | null>(null);
 
   // 从本地存储加载排序状态
   const savedSortBy = JSON.parse(localStorage.getItem('tableSortBy')) || [sortById];
@@ -66,7 +69,8 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
     setShowModalDisconnect(false);
   };
 
-  const handlerDisconnect = (id) => {
+  const handlerDisconnect = (id, e) => {
+    e.stopPropagation();
     setOperationId(id);
     setShowModalDisconnect(true);
   };
@@ -77,7 +81,7 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
         return (
           <XCircle
             style={{ cursor: 'pointer' }}
-            onClick={() => handlerDisconnect(cell.row.original.id)}
+            onClick={(e) => handlerDisconnect(cell.row.original.id, e)}
           ></XCircle>
         );
       case 'start':
@@ -99,7 +103,7 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
   }, [state.sortBy]);
 
   return (
-    <div style={{ marginTop: '5px' }}>
+    <div className={s.tableWrapper}>
       <table {...getTableProps()} className={cx(s.table, 'connections-table')}>
         <thead>
           {headerGroups.map((headerGroup, trindex) => {
@@ -128,7 +132,7 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
           {rows.map((row, i) => {
             prepareRow(row);
             return (
-              <tr className={s.tr} key={i}>
+              <tr className={s.tr} key={i} onClick={() => setSelectedConn((row as any).original)}>
                 {row.cells.map((cell) => {
                   return (
                     <td
@@ -150,6 +154,11 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
         onRequestClose={() => setShowModalDisconnect(false)}
         primaryButtonOnTap={disconnectOperation}
       ></MOdalCloseConnection>
+      <ModalConnectionDetails
+        isOpen={!!selectedConn}
+        onRequestClose={() => setSelectedConn(null)}
+        connection={selectedConn}
+      />
     </div>
   );
 }

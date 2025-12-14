@@ -1,6 +1,6 @@
 .connections-table {
   td.ctrl {
-    min-width: 4em;
+    min-width: 3.5em;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -8,10 +8,29 @@
 
     svg {
       height: 16px;
+      width: 16px;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 1;
+        color: #e74c3c;
+        transform: scale(1.1);
+      }
     }
   }
 
-  td.type,
+  td.type {
+    min-width: 8em;
+    text-align: center;
+
+    // 类型标签样式
+    &::before {
+      content: '';
+    }
+  }
+
   td.start,
   td.downloadSpeedCurr,
   td.uploadSpeedCurr,
@@ -19,5 +38,47 @@
   td.upload {
     min-width: 7em;
     text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  td.downloadSpeedCurr,
+  td.download {
+    color: #27ae60;
+  }
+
+  td.uploadSpeedCurr,
+  td.upload {
+    color: #3498db;
+  }
+
+  // 进程列
+  td.process {
+    max-width: 12em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // 域名/Host列
+  td.host {
+    max-width: 20em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // 规则列
+  td.rule {
+    max-width: 15em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // 节点链
+  td.chains {
+    // 不截断：完整展示节点链（必要时允许换行）
+    max-width: none;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: nowrap;
+    word-break: break-word;
   }
 }

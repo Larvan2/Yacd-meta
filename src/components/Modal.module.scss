@@ -14,7 +14,8 @@
 .content {
   outline: none;
   color: var(--color-text);
-  background: #444;
+  background: var(--bg-modal);
   padding: 20px;
-  border-radius: 10px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-card);
 }
