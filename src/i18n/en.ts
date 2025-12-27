@@ -17,6 +17,7 @@ export const data = {
   close_all_connections: 'Close All Connections',
   close_filter_connections: 'Close all connections after filtering',
   Search: 'Search',
+  Sort: 'Sort',
   Up: 'Up',
   Down: 'Down',
   'Test Latency': 'Test Latency',

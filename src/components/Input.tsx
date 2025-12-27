@@ -1,14 +1,18 @@
+import cx from 'clsx';
 import React from 'react';
 
 import s0 from './Input.module.scss';
 
 const { useState, useRef, useEffect, useCallback } = React;
 
-export default function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
-  return <input className={s0.input} {...props} />;
+export default function Input({
+  className,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement>) {
+  return <input className={cx(s0.input, className)} {...props} />;
 }
 
-export function SelfControlledInput({ value, ...restProps }) {
+export function SelfControlledInput({ value, className, ...restProps }) {
   const [internalValue, setInternalValue] = useState(value);
   const refValue = useRef(value);
   useEffect(() => {
@@ -20,5 +24,12 @@ export function SelfControlledInput({ value, ...restProps }) {
   }, [value]);
   const onChange = useCallback((e) => setInternalValue(e.target.value), [setInternalValue]);
 
-  return <input className={s0.input} value={internalValue} onChange={onChange} {...restProps} />;
+  return (
+    <input
+      className={cx(s0.input, className)}
+      value={internalValue}
+      onChange={onChange}
+      {...restProps}
+    />
+  );
 }

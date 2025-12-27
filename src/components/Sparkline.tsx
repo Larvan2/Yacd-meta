@@ -10,12 +10,16 @@ const { useMemo } = React;
 const extraChartOptions: any = {
   responsive: true,
   maintainAspectRatio: false,
+  parsing: false,
   animation: {
     duration: 1000,
     easing: 'linear',
   },
   animations: {
     y: {
+      duration: 0,
+    },
+    x: {
       duration: 0,
     },
   },

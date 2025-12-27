@@ -54,6 +54,7 @@ declare module 'react-table' {
 
   interface Row {
     cells: Cell[];
+    original: any;
   }
 
   export function useTable(
@@ -66,6 +67,7 @@ declare module 'react-table' {
     setHiddenColumns: (columns: string[]) => void;
     rows: Row[];
     prepareRow(r: Row): void;
+    toggleSortBy: (columnId: string, descending?: boolean, isMulti?: boolean) => void;
   };
 
   export function useSortBy(): Empty;

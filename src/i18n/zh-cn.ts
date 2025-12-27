@@ -18,6 +18,7 @@ export const data = {
   close_all_connections: '关闭所有连接',
   close_filter_connections: '关闭所有过滤后的连接',
   Search: '查找',
+  Sort: '排序',
   Up: '上传',
   Down: '下载',
   'Test Latency': '延迟测速',

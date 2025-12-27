@@ -29,30 +29,31 @@
 
 .header {
   display: grid;
-  grid-template-columns: 1fr minmax(auto, 320px);
+  grid-template-columns: 1fr auto;
   align-items: center;
-  padding-right: 20px;
-  margin-bottom: 8px;
+  padding: 20px 30px 10px;
+  gap: 20px;
 
-  @media (--breakpoint-not-small) {
-    padding-right: 30px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: 15px 15px 5px;
+    gap: 12px;
   }
 }
 
 .inputWrapper {
-  margin: 0;
-
-  @media (--breakpoint-not-small) {
-    margin: 0 25px;
-  }
-
   width: 100%;
-  max-width: 350px;
-  justify-self: flex-end;
+  max-width: 320px;
+  justify-self: end;
+
+  @media (max-width: 768px) {
+    max-width: none;
+  }
 }
 
 .input {
   -webkit-appearance: none;
+  appearance: none;
   background-color: var(--color-input-bg);
   background-image: none;
   border-radius: 12px;
@@ -87,6 +88,12 @@
   padding: 4px;
   background: var(--bg-near-transparent);
   border-radius: 12px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    width: 100%;
+    padding: 8px;
+  }
 }
 
 .toolbarBtn {
@@ -130,6 +137,60 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 4px rgba(231, 76, 60, 0.4);
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 15px;
+    gap: 12px;
+  }
+}
+
+.tabGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+}
+
+.tabList {
+  padding: 0 !important;
+  border: none !important;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  @media (max-width: 768px) {
+    justify-content: space-between;
+    width: 100%;
+
+    :global(.react-tabs__tab) {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+}
+
+.sourceSelect {
+  width: auto;
+  min-width: 120px;
+
+  @media (max-width: 768px) {
+    width: 100% !important;
+  }
 }
 
 .toolbarDivider {

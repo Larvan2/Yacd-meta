@@ -26,6 +26,9 @@ export const memoryChartOptions: any = {
     y: {
       duration: 0,
     },
+    x: {
+      duration: 0,
+    },
   },
   transitions: {
     active: {

@@ -364,22 +364,9 @@ function Conn({ apiConfig }) {
         </div>
       </div>
       <Tabs>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            paddingLeft: '30px',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingRight: '30px',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-            <TabList
-              style={{
-                padding: '0 15px 0 0',
-              }}
-            >
+        <div className={s.controls}>
+          <div className={s.tabGroup}>
+            <TabList className={s.tabList}>
               <Tab>
                 <span>{t('Active')}</span>
                 <span className={s.connQty}>
@@ -398,7 +385,7 @@ function Conn({ apiConfig }) {
             <Select
               options={connIpSet}
               selected={filterSourceIpStr}
-              style={{ width: 'unset' }}
+              className={s.sourceSelect}
               onChange={(e) => setFilterSourceIpStr(e.target.value)}
             />
           </div>

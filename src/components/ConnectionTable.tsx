@@ -3,8 +3,8 @@ import './ConnectionTable.scss';
 import cx from 'clsx';
 import { formatDistance, Locale } from 'date-fns';
 import { enUS, zhCN, zhTW } from 'date-fns/locale';
-import React, { useEffect, useState } from 'react';
-import { ChevronDown } from 'react-feather';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ArrowDown, ArrowUp, ChevronDown, Sliders } from 'react-feather';
 import { XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { useSortBy, useTable } from 'react-table';
@@ -15,6 +15,7 @@ import { State } from '~/store/types';
 import * as connAPI from '../api/connections';
 import prettyBytes from '../misc/pretty-bytes';
 import { getClashAPIConfig } from '../store/app';
+import ConnectionCard from './ConnectionCard';
 import s from './ConnectionTable.module.scss';
 import MOdalCloseConnection from './ModalCloseAllConnections';
 import ModalConnectionDetails from './ModalConnectionDetails';
@@ -23,6 +24,7 @@ import { connect } from './StateProvider';
 const sortById = { id: 'id', desc: true };
 
 function Table({ data, columns, hiddenColumns, apiConfig }) {
+  const { t, i18n } = useTranslation();
   const [operationId, setOperationId] = useState('');
   const [showModalDisconnect, setShowModalDisconnect] = useState(false);
   const [selectedConn, setSelectedConn] = useState<FormattedConn | null>(null);
@@ -45,14 +47,23 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
     useSortBy
   );
 
-  const { getTableProps, setHiddenColumns, headerGroups, rows, prepareRow } = table;
+  const { getTableProps, setHiddenColumns, headerGroups, rows, prepareRow, toggleSortBy } = table;
   const state = table.state;
+
+  const sortOptions = useMemo(() => {
+    return columns
+      .filter((c) => c.accessor !== 'id' && c.accessor !== 'ctrl')
+      .map((c) => ({
+        label: t(c.Header),
+        value: c.accessor,
+      }));
+  }, [columns, t]);
+
+  const currentSort = state.sortBy[0] || sortById;
 
   useEffect(() => {
     setHiddenColumns(hiddenColumns);
   }, [setHiddenColumns, hiddenColumns]);
-
-  const { t, i18n } = useTranslation();
 
   let locale: Locale;
 
@@ -104,6 +115,46 @@ function Table({ data, columns, hiddenColumns, apiConfig }) {
 
   return (
     <div className={s.tableWrapper}>
+      <div className={s.cardsView}>
+        <div className={s.mobileSortToolbar}>
+          <div className={s.sortSelectWrapper}>
+            <div className={s.selectedValue}>
+              <Sliders size={14} />
+              <span>
+                {t('Sort')}: {sortOptions.find((opt) => opt.value === currentSort.id)?.label}
+              </span>
+            </div>
+            <select
+              value={currentSort.id}
+              onChange={(e) => toggleSortBy(e.target.value, currentSort.desc)}
+            >
+              {sortOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={14} className={s.selectArrow} />
+          </div>
+          <button
+            className={s.sortDirBtn}
+            onClick={() => toggleSortBy(currentSort.id, !currentSort.desc)}
+          >
+            {currentSort.desc ? <ArrowDown size={18} /> : <ArrowUp size={18} />}
+          </button>
+        </div>
+        {rows.map((row) => {
+          const conn = row.original as FormattedConn;
+          return (
+            <ConnectionCard
+              key={conn.id}
+              conn={conn}
+              onDisconnect={handlerDisconnect}
+              onClick={() => setSelectedConn(conn)}
+            />
+          );
+        })}
+      </div>
       <table {...getTableProps()} className={cx(s.table, 'connections-table')}>
         <thead>
           {headerGroups.map((headerGroup, trindex) => {
