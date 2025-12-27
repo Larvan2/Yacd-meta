@@ -1,10 +1,9 @@
 import { formatDistance } from 'date-fns';
 import * as React from 'react';
+import { Activity, Database, RefreshCw } from 'react-feather';
 
 import Button from '~/components/Button';
 import { useUpdateRuleProviderItem } from '~/components/rules/rules.hooks';
-import { SectionNameType } from '~/components/shared/Basic';
-import { RotateIcon } from '~/components/shared/RotateIcon';
 
 import s from './RuleProviderItem.module.scss';
 
@@ -21,17 +20,37 @@ export function RuleProviderItem({
   const timeAgo = formatDistance(new Date(updatedAt), new Date());
   return (
     <div className={s.RuleProviderItem}>
-      <span className={s.left}>{idx}</span>
+      <div className={s.left}>{idx}</div>
       <div className={s.middle}>
-        <SectionNameType name={name} type={`${vehicleType} / ${behavior}`} />
-        <div className={s.gray}>{ruleCount < 2 ? `${ruleCount} rule` : `${ruleCount} rules`}</div>
-        <small className={s.gray}>Updated {timeAgo} ago</small>
+        <div className={s.nameRow}>
+          <span className={s.name}>{name}</span>
+          <div className={s.badgeGroup}>
+            <span className={s.badge}>
+              <Database size={12} />
+              {vehicleType}
+            </span>
+            <span className={s.badge}>
+              <Activity size={12} />
+              {behavior}
+            </span>
+          </div>
+        </div>
+        <div className={s.infoRow}>
+          <span className={s.count}>{ruleCount} rules</span>
+          <span className={s.dot}>•</span>
+          <span className={s.time}>Updated {timeAgo} ago</span>
+        </div>
       </div>
-      <span className={s.refreshButtonWrapper}>
-        <Button onClick={onClickRefreshButton} disabled={isRefreshing}>
-          <RotateIcon isRotating={isRefreshing} />
+      <div className={s.right}>
+        <Button
+          kind="minimal"
+          onClick={onClickRefreshButton}
+          disabled={isRefreshing}
+          className={s.refreshButton}
+        >
+          <RefreshCw size={18} className={isRefreshing ? s.rotating : ''} />
         </Button>
-      </span>
+      </div>
     </div>
   );
 }

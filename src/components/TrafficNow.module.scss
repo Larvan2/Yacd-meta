@@ -1,45 +1,46 @@
 .TrafficNow {
   color: var(--color-text);
-  align-items: center;
-  flex-wrap: wrap;
-
   display: grid;
-  grid-gap: 10px;
-  grid-template-columns: 90%;
-  /* 当屏幕宽度大于300像素时，设置为一行两列 */
-  @media only screen and (min-width: 300px) {
-    grid-template-columns: 49% 49%;
-  }
-
-  /* 当屏幕宽度大于600像素时，设置为一行三列 */
-  @media only screen and (min-width: 600px) {
-    grid-template-columns: repeat(auto-fill, 32%);
-  }
-  /* 当屏幕宽度大于1000像素时，设置为一行四列 */
-  @media only screen and (min-width: 1000px) {
-    grid-template-columns: repeat(auto-fill, 24%);
-  }
-  /* 当屏幕宽度大于1000像素时，设置为一行四列 */
-  @media only screen and (min-width: 1200px) {
-    grid-template-columns: repeat(auto-fill, 15%);
-  }
-  justify-content: space-between;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-gap: 20px;
+  padding: 10px 0;
 
   .sec {
-    padding: 10px;
+    padding: 20px;
     background-color: var(--color-bg-card);
-    border-radius: 10px;
-    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-    div:nth-child(1) {
-      color: var(--color-text-secondary);
-      font-size: 0.7em;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 140px;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
-    div:nth-child(2) {
-      padding: 10px 0 0;
-      font-size: 1.2em;
-      @media only screen and (min-width: 720px) {
-        font-size: 1.1em;
+
+    .header {
+      display: flex;
+      align-items: center;
+      color: var(--color-text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+
+      span {
+        margin-left: 8px;
       }
+    }
+
+    .value {
+      padding: 12px 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-text);
+      font-family: 'Roboto Mono', monospace;
     }
   }
 }

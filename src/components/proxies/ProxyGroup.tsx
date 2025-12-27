@@ -84,7 +84,7 @@ function ProxyGroupImpl({
       }
     } catch (err) {}
     setIsTestingLatency(false);
-  }, [all, apiConfig, dispatch, name, version.meta]);
+  }, [all, apiConfig, dispatch, name, version.meta, latencyTestUrl, requestDelayForProxies]);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 

@@ -1,14 +1,46 @@
 @import '~/styles/utils/custom-media';
 
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .header {
-  display: grid;
-  grid-template-columns: 1fr minmax(auto, 290px);
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding-right: 15px;
+  padding: 16px 20px;
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-bg-card-border, rgba(0, 0, 0, 0.05));
+  margin-bottom: 8px;
+  flex-shrink: 0;
+
+  @media (--breakpoint-not-small) {
+    padding: 12px 40px;
+  }
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+
+  @media (--breakpoint-not-small) {
+    font-size: 1.75rem;
+  }
+}
+
+.filterWrapper {
+  width: 100%;
+  max-width: 300px;
+  margin-left: 20px;
 }
 
 .RuleProviderItemWrapper {
-  padding: 6px 15px;
+  padding: 8px 15px;
   @media (--breakpoint-not-small) {
     padding: 10px 40px;
   }

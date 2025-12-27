@@ -321,7 +321,7 @@ function Conn({ apiConfig }) {
         prevConnsRef.current = x;
       }
     },
-    [setConns, sourceMap, isRefreshPaused]
+    [setConns, setClosedConns, sourceMap, isRefreshPaused]
   );
   const [reConnectCount, setReConnectCount] = useState(0);
 

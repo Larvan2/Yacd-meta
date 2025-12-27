@@ -1,5 +1,5 @@
+import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import React from 'react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { ChevronDown, ChevronUp, Menu } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 

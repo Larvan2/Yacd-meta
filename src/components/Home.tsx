@@ -1,11 +1,8 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ContentHeader from './ContentHeader';
 import s0 from './Home.module.scss';
-import Loading from './Loading';
-import MemoryChart from './MemoryChart';
-import TrafficChart from './TrafficChart';
 import TrafficNow from './TrafficNow';
 
 export default function Home() {
@@ -14,15 +11,7 @@ export default function Home() {
     <div>
       <ContentHeader title={t('Overview')} />
       <div className={s0.root}>
-        <div>
-          <TrafficNow />
-        </div>
-        <div className={s0.chart}>
-          <Suspense fallback={<Loading height="200px" />}>
-            <TrafficChart />
-            <MemoryChart />
-          </Suspense>
-        </div>
+        <TrafficNow />
       </div>
     </div>
   );

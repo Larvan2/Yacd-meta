@@ -12,7 +12,6 @@ import { ClashAPIConfig } from '~/types';
 
 import useRemainingViewPortHeight from '../hooks/useRemainingViewPortHeight';
 import { getClashAPIConfig } from '../store/app';
-import ContentHeader from './ContentHeader';
 import Rule from './Rule';
 import s from './Rules.module.scss';
 import { connect } from './StateProvider';
@@ -42,10 +41,10 @@ function getItemSizeFactory({ provider }) {
     const providerQty = provider.names.length;
     if (idx < providerQty) {
       // provider
-      return 90;
+      return 100;
     }
     // rule
-    return 60;
+    return 70;
   };
 }
 
@@ -90,10 +89,12 @@ function Rules({ apiConfig }: RulesProps) {
   const { t } = useTranslation();
 
   return (
-    <div>
+    <div className={s.container}>
       <div className={s.header}>
-        <ContentHeader title={t('Rules')} />
-        <TextFilter textAtom={ruleFilterText} placeholder={t('Search')} />
+        <h1 className={s.title}>{t('Rules')}</h1>
+        <div className={s.filterWrapper}>
+          <TextFilter textAtom={ruleFilterText} placeholder={t('Search')} />
+        </div>
       </div>
       <div ref={refRulesContainer} style={{ paddingBottom }}>
         <VariableSizeList

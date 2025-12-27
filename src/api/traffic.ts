@@ -8,9 +8,11 @@ const textDecoder = new TextDecoder('utf-8');
 const Size = 150;
 
 const traffic = {
-  labels: Array(Size).fill(0),
-  up: Array(Size),
-  down: Array(Size),
+  labels: Array(Size)
+    .fill(0)
+    .map((_, i) => Date.now() - (Size - i) * 1000),
+  up: Array(Size).fill(0),
+  down: Array(Size).fill(0),
 
   size: Size,
   subscribers: [],

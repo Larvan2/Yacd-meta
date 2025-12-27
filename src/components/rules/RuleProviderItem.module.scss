@@ -1,33 +1,108 @@
 .RuleProviderItem {
-  display: grid;
-  grid-template-columns: 40px 1fr 46px;
+  display: flex;
+  align-items: center;
   height: 100%;
+  padding: 12px 16px;
+  background: var(--color-bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--color-bg-card-border, rgba(0, 0, 0, 0.05));
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-focus-blue);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    .refreshButton {
+      opacity: 1;
+    }
+  }
 }
 
 .left {
-  display: inline-flex;
-  align-items: center;
+  width: 32px;
+  flex-shrink: 0;
   color: var(--color-text-secondary);
-  opacity: 0.4;
+  font-size: 0.8rem;
+  opacity: 0.5;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .middle {
-  display: grid;
-  grid-template-rows: 1fr auto auto;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nameRow {
+  display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.gray {
-  color: #777;
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
-.refreshButtonWrapper {
-  display: grid;
-  place-items: center;
-  opacity: 0;
-  transition: opacity 0.2s;
+.badgeGroup {
+  display: flex;
+  gap: 6px;
 }
 
-.RuleProviderItem:hover .refreshButtonWrapper {
-  opacity: 1;
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary, rgba(0, 0, 0, 0.05));
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.dot {
+  opacity: 0.5;
+}
+
+.right {
+  margin-left: 12px;
+}
+
+.refreshButton {
+  opacity: 0.4;
+  transition: all 0.2s ease;
+  padding: 8px !important;
+  border-radius: 50% !important;
+
+  &:hover {
+    opacity: 1;
+    background: var(--color-bg-secondary, rgba(0, 0, 0, 0.1)) !important;
+  }
+}
+
+.rotating {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -5,26 +5,98 @@ export const chartJSResource = createAsset(() => {
   return import('~/misc/chart-lib');
 });
 
-export const commonDataSetProps = { borderWidth: 1, pointRadius: 0, tension: 0.2, fill: true };
+export const commonDataSetProps = {
+  borderWidth: 1.5,
+  pointRadius: 0,
+  tension: 0.4,
+  fill: true,
+  pointHitRadius: 10,
+  pointHoverRadius: 4,
+};
 
-export const memoryChartOptions: import('chart.js').ChartOptions<'line'> = {
+export const memoryChartOptions: any = {
   responsive: true,
-  maintainAspectRatio: true,
+  maintainAspectRatio: false,
+  parsing: false,
+  animation: {
+    duration: 1000,
+    easing: 'linear',
+  },
+  animations: {
+    y: {
+      duration: 0,
+    },
+  },
+  transitions: {
+    active: {
+      animation: {
+        duration: 0,
+      },
+    },
+  },
+  elements: {
+    line: {
+      tension: 0.4,
+    },
+  },
+  interaction: {
+    mode: 'index',
+    intersect: false,
+  },
   plugins: {
-    legend: { labels: { boxWidth: 20 } },
+    legend: {
+      display: true,
+      position: 'top',
+      align: 'end',
+      labels: {
+        boxWidth: 12,
+        usePointStyle: true,
+        pointStyle: 'circle',
+        padding: 15,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      mode: 'index',
+      intersect: false,
+      padding: 10,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      titleColor: '#fff',
+      bodyColor: '#fff',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      borderWidth: 1,
+      callbacks: {
+        label(context) {
+          let label = context.dataset.label || '';
+          if (label) {
+            label += ': ';
+          }
+          if (context.parsed.y !== null) {
+            label += prettyBytes(context.parsed.y);
+          }
+          return label;
+        },
+      },
+    },
   },
   scales: {
-    x: { display: false, type: 'category' },
+    x: {
+      type: 'time',
+      display: false,
+    },
     y: {
       type: 'linear',
       display: true,
+      beginAtZero: true,
+      grace: '5%',
       grid: {
         display: true,
-        color: '#555',
+        color: 'rgba(128, 128, 128, 0.1)',
         drawTicks: false,
       },
       border: {
-        dash: [3, 6],
+        display: false,
+        dash: [5, 5],
       },
       ticks: {
         maxTicksLimit: 3,
